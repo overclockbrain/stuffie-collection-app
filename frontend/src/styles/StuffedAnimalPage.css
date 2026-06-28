@@ -1,0 +1,85 @@
+/* ─────────────────────────────────────────
+   StuffedAnimalPage
+───────────────────────────────────────── */
+
+.page-container {
+    min-height: 100vh;
+    background-color: #fdf6f0;
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.page-title {
+    font-size: 24px;
+    color: #333;
+}
+
+.btn-add {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    background-color: #e8956d;
+    color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-add:hover {
+    background-color: #d4805a;
+}
+
+.search-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    outline: none;
+    background-color: #fff;
+}
+
+.search-input:focus {
+    border-color: #e8956d;
+}
+
+.btn-search {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-search:hover {
+    background-color: #555;
+}
+
+.result-count {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 16px;
+}
+
+.loading-text {
+    text-align: center;
+    color: #888;
+    padding: 40px;
+}
