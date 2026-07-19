@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { createStuffedAnimal, checkDuplicate, type StuffedAnimalRequest, type StuffedAnimal } from '../api/stuffedAnimal';
+import SeriesSelect from './SeriesSelect';
 import '../styles/StuffedAnimalForm.css';
 import '../styles/common.css';
 
@@ -10,6 +11,7 @@ interface Props {
 
 export default function StuffedAnimalForm({ onSuccess }: Props) {
     const [name, setName] = useState('');
+    const [seriesId, setSeriesId] = useState<number | null>(null);
     const [character, setCharacter] = useState('');
     const [purchasePlace, setPurchasePlace] = useState('');
     const [purchaseDate, setPurchaseDate] = useState('');
@@ -26,7 +28,11 @@ export default function StuffedAnimalForm({ onSuccess }: Props) {
         setLoading(true);
 
         try {
-            const dupes = await checkDuplicate({ name, character: character || undefined });
+            const dupes = await checkDuplicate({
+                name,
+                seriesId: seriesId ?? undefined,
+                character: character || undefined,
+            });
             if (dupes.length > 0) {
                 setDuplicates(dupes);
                 setLoading(false);
@@ -56,6 +62,7 @@ export default function StuffedAnimalForm({ onSuccess }: Props) {
     const register = async () => {
         const request: StuffedAnimalRequest = {
             name,
+            seriesId: seriesId,
             character: character || undefined,
             purchasePlace: purchasePlace || undefined,
             purchaseDate: purchaseDate || undefined,
@@ -63,6 +70,7 @@ export default function StuffedAnimalForm({ onSuccess }: Props) {
         };
         await createStuffedAnimal(request);
         setName('');
+        setSeriesId(null);
         setCharacter('');
         setPurchasePlace('');
         setPurchaseDate('');
@@ -78,6 +86,11 @@ export default function StuffedAnimalForm({ onSuccess }: Props) {
                 <div className="field">
                     <label>名前 *</label>
                     <input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="例: くまのプーさん" required />
+                </div>
+
+                <div className="field">
+                    <label>シリーズ</label>
+                    <SeriesSelect value={seriesId} onChange={setSeriesId} />
                 </div>
 
                 <div className="field">
