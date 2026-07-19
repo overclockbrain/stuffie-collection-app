@@ -5,17 +5,19 @@ interface Props {
     /** 表示するぬいぐるみ一覧 */
     animals: StuffedAnimal[];
     /** 削除後に一覧を再取得するコールバック */
-    onDeleted: () => void;
+    onChanged: () => void;
+    /** 編集ボタン押下時に呼ばれるコールバック（編集対象を親に渡す） */
+    onEdit: (animal: StuffedAnimal) => void;
 }
 
-export default function StuffedAnimalList({ animals, onDeleted }: Props) {
+export default function StuffedAnimalList({ animals, onChanged, onEdit }: Props) {
     const handleDelete = async (id: number, name: string) => {
         if (!confirm(`「${name}」を削除してええ？`)) return;
         try {
             await deleteStuffedAnimal(id);
-            onDeleted();
+            onChanged();
         } catch {
-            alert('削除に失敗しました');
+            alert('削除に失敗しました（権限がないかもしれません）');
         }
     };
 
@@ -65,10 +67,15 @@ export default function StuffedAnimalList({ animals, onDeleted }: Props) {
                         )}
                     </div>
 
-                    {/* 削除ボタン */}
-                    <button className="btn-delete" onClick={() => handleDelete(animal.id, animal.name)}>
-                        削除
-                    </button>
+                    {/* 編集・削除ボタン */}
+                    <div className="animal-actions">
+                        <button className="btn-edit" onClick={() => onEdit(animal)}>
+                            編集
+                        </button>
+                        <button className="btn-delete" onClick={() => handleDelete(animal.id, animal.name)}>
+                            削除
+                        </button>
+                    </div>
                 </div>
             ))}
         </div>

@@ -76,3 +76,29 @@
 .btn-cancel:hover {
     background-color: #f5f5f5;
 }
+
+/* 編集フォーム用のボタン配置 */
+.edit-form-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.edit-form-actions .btn-primary {
+    flex: 2;
+}
+
+.edit-form-actions .btn-cancel {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #555;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.edit-form-actions .btn-cancel:hover {
+    background-color: #f5f5f5;
+}
