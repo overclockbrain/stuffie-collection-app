@@ -2,6 +2,18 @@
    共通スタイル
 ───────────────────────────────────────── */
 
+/* ページ全体の背景を敷く（余白が黒くならないように） */
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #fdf6f0;
+}
+
+#root {
+    background-color: #fdf6f0;
+    min-height: 100vh;
+}
+
 /* フォームフィールド */
 .field {
     display: flex;
@@ -22,10 +34,16 @@
     border: 1px solid #ddd;
     font-size: 14px;
     outline: none;
+    color: #333;
+    background-color: #fff;
 }
 
 .input:focus {
     border-color: #e8956d;
+}
+
+.input::placeholder {
+    color: #999;
 }
 
 textarea.input {
