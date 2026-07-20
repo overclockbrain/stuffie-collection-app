@@ -1,9 +1,9 @@
-package com.stuffie.stuffed_animal_service.entity;
-
+package com.stuffie.stuffed_animal_service.stuffedanimal;
+import com.stuffie.stuffed_animal_service.auth.User;
+import com.stuffie.stuffed_animal_service.series.Series;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 

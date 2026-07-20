@@ -1,6 +1,4 @@
-package com.stuffie.stuffed_animal_service.security;
-
-import com.stuffie.stuffed_animal_service.repository.UserRepository;
+package com.stuffie.stuffed_animal_service.auth;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

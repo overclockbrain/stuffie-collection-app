@@ -1,8 +1,5 @@
-package com.stuffie.stuffed_animal_service.repository;
-
-import com.stuffie.stuffed_animal_service.entity.Series;
+package com.stuffie.stuffed_animal_service.series;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.Optional;
 
 /**

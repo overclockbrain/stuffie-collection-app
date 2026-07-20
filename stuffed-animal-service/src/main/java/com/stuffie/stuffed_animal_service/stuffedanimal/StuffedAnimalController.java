@@ -1,15 +1,10 @@
-package com.stuffie.stuffed_animal_service.controller;
-
-import com.stuffie.stuffed_animal_service.dto.StuffedAnimalRequest;
-import com.stuffie.stuffed_animal_service.dto.StuffedAnimalResponse;
-import com.stuffie.stuffed_animal_service.service.StuffedAnimalService;
+package com.stuffie.stuffed_animal_service.stuffedanimal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 /**

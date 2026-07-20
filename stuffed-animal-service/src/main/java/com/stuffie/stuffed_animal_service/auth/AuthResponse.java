@@ -1,4 +1,4 @@
-package com.stuffie.stuffed_animal_service.dto;
+package com.stuffie.stuffed_animal_service.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

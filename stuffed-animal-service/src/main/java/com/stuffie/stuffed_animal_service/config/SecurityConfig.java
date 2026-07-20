@@ -1,6 +1,5 @@
 package com.stuffie.stuffed_animal_service.config;
-
-import com.stuffie.stuffed_animal_service.security.JwtAuthFilter;
+import com.stuffie.stuffed_animal_service.auth.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.util.List;
 
 /**

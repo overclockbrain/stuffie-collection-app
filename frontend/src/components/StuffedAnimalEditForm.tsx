@@ -14,7 +14,6 @@ interface Props {
 }
 
 export default function StuffedAnimalEditForm({ animal, onSuccess, onCancel }: Props) {
-    // 編集対象の現在値で初期化する
     const [name, setName] = useState(animal.name);
     const [seriesId, setSeriesId] = useState<number | null>(animal.seriesId);
     const [character, setCharacter] = useState(animal.character ?? '');
@@ -41,7 +40,6 @@ export default function StuffedAnimalEditForm({ animal, onSuccess, onCancel }: P
             await updateStuffedAnimal(animal.id, request);
             onSuccess();
         } catch {
-            // 403は権限なし（他人のデータ）、それ以外は一般的なエラーとして表示
             setError('更新に失敗しました（権限がないかもしれません）');
         } finally {
             setLoading(false);

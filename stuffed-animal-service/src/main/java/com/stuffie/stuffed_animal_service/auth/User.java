@@ -1,4 +1,4 @@
-package com.stuffie.stuffed_animal_service.entity;
+package com.stuffie.stuffed_animal_service.auth;
 
 import jakarta.persistence.*;
 import lombok.Data;

@@ -1,9 +1,5 @@
-package com.stuffie.stuffed_animal_service.controller;
+package com.stuffie.stuffed_animal_service.auth;
 
-import com.stuffie.stuffed_animal_service.dto.AuthResponse;
-import com.stuffie.stuffed_animal_service.dto.LoginRequest;
-import com.stuffie.stuffed_animal_service.dto.RegisterRequest;
-import com.stuffie.stuffed_animal_service.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

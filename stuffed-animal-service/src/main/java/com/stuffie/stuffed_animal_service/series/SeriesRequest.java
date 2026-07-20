@@ -1,4 +1,4 @@
-package com.stuffie.stuffed_animal_service.dto;
+package com.stuffie.stuffed_animal_service.series;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

@@ -8,10 +8,10 @@ import '../styles/StuffedAnimalPage.css';
 export default function StuffedAnimalPage() {
     const [animals, setAnimals] = useState<StuffedAnimal[]>([]);
     const [loading, setLoading] = useState(false);
-    const [showForm, setShowForm] = useState(false);
     const [searchName, setSearchName] = useState('');
-    // 編集中のぬいぐるみ（編集してへんときはnull）。Pageで管理することで
-    // 編集中は一覧・検索・追加ボタンを丸ごと隠せるようにする。
+    // 追加モードかどうか（trueのときは追加フォームだけ表示する）
+    const [isAdding, setIsAdding] = useState(false);
+    // 編集中のぬいぐるみ（編集してへんときはnull）
     const [editingAnimal, setEditingAnimal] = useState<StuffedAnimal | null>(null);
 
     /** ぬいぐるみ一覧を取得する */
@@ -32,6 +32,26 @@ export default function StuffedAnimalPage() {
     useEffect(() => {
         loadAnimals();
     }, []);
+
+    // 追加モード中は追加フォームだけを表示する（編集モードと同じ見せ方に統一）
+    if (isAdding) {
+        return (
+            <div className="page-container">
+                <div className="page-content">
+                    <div className="page-header">
+                        <h1 className="page-title">🧸 stuffie-collection</h1>
+                    </div>
+                    <StuffedAnimalForm
+                        onSuccess={() => {
+                            setIsAdding(false);
+                            loadAnimals();
+                        }}
+                        onCancel={() => setIsAdding(false)}
+                    />
+                </div>
+            </div>
+        );
+    }
 
     // 編集モード中は編集フォームだけを表示する
     if (editingAnimal) {
@@ -60,20 +80,10 @@ export default function StuffedAnimalPage() {
                 {/* ヘッダー */}
                 <div className="page-header">
                     <h1 className="page-title">🧸 stuffie-collection</h1>
-                    <button className="btn-add" onClick={() => setShowForm(!showForm)}>
-                        {showForm ? '閉じる' : '＋ 追加'}
+                    <button className="btn-add" onClick={() => setIsAdding(true)}>
+                        ＋ 追加
                     </button>
                 </div>
-
-                {/* 登録フォーム */}
-                {showForm && (
-                    <StuffedAnimalForm
-                        onSuccess={() => {
-                            setShowForm(false);
-                            loadAnimals();
-                        }}
-                    />
-                )}
 
                 {/* 検索バー */}
                 <div className="search-bar">

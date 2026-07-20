@@ -12,7 +12,7 @@ interface Props {
 
 export default function StuffedAnimalList({ animals, onChanged, onEdit }: Props) {
     const handleDelete = async (id: number, name: string) => {
-        if (!confirm(`「${name}」を削除してええ？`)) return;
+        if (!confirm(`「${name}」を削除していいですか？`)) return;
         try {
             await deleteStuffedAnimal(id);
             onChanged();
@@ -24,7 +24,7 @@ export default function StuffedAnimalList({ animals, onChanged, onEdit }: Props)
     if (animals.length === 0) {
         return (
             <div className="animal-empty">
-                <p>まだぬいぐるみが登録されてへんで！</p>
+                <p>まだぬいぐるみが登録されていません。可愛いぬいぐるみを登録してね！</p>
             </div>
         );
     }
