@@ -1,7 +1,4 @@
-package com.stuffie.stuffed_animal_service.config;
-
-import com.stuffie.stuffed_animal_service.entity.User;
-import com.stuffie.stuffed_animal_service.repository.UserRepository;
+package com.stuffie.stuffed_animal_service.auth;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;

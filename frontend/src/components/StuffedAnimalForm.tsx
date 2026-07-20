@@ -7,9 +7,11 @@ import '../styles/common.css';
 interface Props {
     /** 登録成功時に呼ばれるコールバック */
     onSuccess: () => void;
+    /** キャンセル時に呼ばれるコールバック */
+    onCancel: () => void;
 }
 
-export default function StuffedAnimalForm({ onSuccess }: Props) {
+export default function StuffedAnimalForm({ onSuccess, onCancel }: Props) {
     const [name, setName] = useState('');
     const [seriesId, setSeriesId] = useState<number | null>(null);
     const [character, setCharacter] = useState('');
@@ -130,9 +132,14 @@ export default function StuffedAnimalForm({ onSuccess }: Props) {
                 )}
 
                 {duplicates.length === 0 && (
-                    <button type="submit" className="btn-primary" disabled={loading}>
-                        {loading ? '登録中...' : '登録する'}
-                    </button>
+                    <div className="edit-form-actions">
+                        <button type="submit" className="btn-primary" disabled={loading}>
+                            {loading ? '登録中...' : '登録する'}
+                        </button>
+                        <button type="button" className="btn-cancel" onClick={onCancel}>
+                            キャンセル
+                        </button>
+                    </div>
                 )}
             </form>
         </div>

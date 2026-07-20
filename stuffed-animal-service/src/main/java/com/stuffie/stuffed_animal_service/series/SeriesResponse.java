@@ -1,8 +1,5 @@
-package com.stuffie.stuffed_animal_service.dto;
-
-import com.stuffie.stuffed_animal_service.entity.Series;
+package com.stuffie.stuffed_animal_service.series;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 /**

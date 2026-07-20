@@ -1,4 +1,4 @@
-package com.stuffie.stuffed_animal_service.security;
+package com.stuffie.stuffed_animal_service.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,10 +1,7 @@
-package com.stuffie.stuffed_animal_service.repository;
-
-import com.stuffie.stuffed_animal_service.entity.StuffedAnimal;
+package com.stuffie.stuffed_animal_service.stuffedanimal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 import java.util.List;
 
 /**

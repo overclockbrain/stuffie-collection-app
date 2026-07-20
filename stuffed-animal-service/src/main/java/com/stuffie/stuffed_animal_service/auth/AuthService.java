@@ -1,11 +1,4 @@
-package com.stuffie.stuffed_animal_service.service;
-
-import com.stuffie.stuffed_animal_service.dto.AuthResponse;
-import com.stuffie.stuffed_animal_service.dto.LoginRequest;
-import com.stuffie.stuffed_animal_service.dto.RegisterRequest;
-import com.stuffie.stuffed_animal_service.entity.User;
-import com.stuffie.stuffed_animal_service.repository.UserRepository;
-import com.stuffie.stuffed_animal_service.security.JwtUtil;
+package com.stuffie.stuffed_animal_service.auth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

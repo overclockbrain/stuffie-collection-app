@@ -1,18 +1,12 @@
-package com.stuffie.stuffed_animal_service.service;
-
-import com.stuffie.stuffed_animal_service.dto.StuffedAnimalRequest;
-import com.stuffie.stuffed_animal_service.dto.StuffedAnimalResponse;
-import com.stuffie.stuffed_animal_service.entity.Series;
-import com.stuffie.stuffed_animal_service.entity.StuffedAnimal;
-import com.stuffie.stuffed_animal_service.entity.User;
-import com.stuffie.stuffed_animal_service.repository.SeriesRepository;
-import com.stuffie.stuffed_animal_service.repository.StuffedAnimalRepository;
-import com.stuffie.stuffed_animal_service.repository.UserRepository;
+package com.stuffie.stuffed_animal_service.stuffedanimal;
+import com.stuffie.stuffed_animal_service.series.Series;
+import com.stuffie.stuffed_animal_service.auth.User;
+import com.stuffie.stuffed_animal_service.series.SeriesRepository;
+import com.stuffie.stuffed_animal_service.auth.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 /**

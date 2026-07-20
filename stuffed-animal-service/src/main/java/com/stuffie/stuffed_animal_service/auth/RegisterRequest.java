@@ -1,4 +1,4 @@
-package com.stuffie.stuffed_animal_service.dto;
+package com.stuffie.stuffed_animal_service.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
