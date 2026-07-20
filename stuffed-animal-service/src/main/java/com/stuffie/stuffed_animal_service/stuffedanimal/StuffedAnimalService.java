@@ -25,11 +25,12 @@ public class StuffedAnimalService {
      * ぬいぐるみ一覧を取得する。
      * 名前・シリーズ・キャラクターで絞り込み可能。
      */
+    @Transactional(readOnly = true)
     public List<StuffedAnimalResponse> findAll(String name, Long seriesId, String character) {
         return stuffedAnimalRepository.findByFilters(name, seriesId, character)
-                .stream()
-                .map(StuffedAnimalResponse::from)
-                .toList();
+            .stream()
+            .map(StuffedAnimalResponse::from)
+            .toList();
     }
 
     /**
@@ -37,6 +38,7 @@ public class StuffedAnimalService {
      *
      * @throws IllegalArgumentException 該当データが存在しない場合
      */
+    @Transactional(readOnly = true)
     public StuffedAnimalResponse findById(Long id) {
         return StuffedAnimalResponse.from(getEntityById(id));
     }
@@ -125,6 +127,7 @@ public class StuffedAnimalService {
      * ダブりチェックを行う。
      * 名前・シリーズ・キャラクターが一致するものを返す。
      */
+    @Transactional(readOnly = true)
     public List<StuffedAnimalResponse> checkDuplicate(String name, Long seriesId, String character) {
         return stuffedAnimalRepository.findDuplicates(name, seriesId, character)
                 .stream()
