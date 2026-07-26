@@ -39,3 +39,15 @@
     flex-direction: column;
     gap: 16px;
 }
+
+/* セッション切れ通知 */
+.session-expired-notice {
+    background-color: #fff8e1;
+    border: 1px solid #f9a825;
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: #f57f17;
+    font-size: 13px;
+    margin-bottom: 16px;
+    text-align: center;
+}

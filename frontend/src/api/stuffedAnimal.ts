@@ -1,21 +1,4 @@
-import axios from 'axios';
-
-// ローカルストレージからトークンを取得してヘッダーに付与する共通設定
-const api = axios.create({
-    baseURL: '/api',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
-
-// リクエスト時にトークンを自動付与するインターセプター
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
+import { api } from './client';
 
 export interface StuffedAnimal {
     id: number;

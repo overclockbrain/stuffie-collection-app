@@ -1,15 +1,13 @@
 import { useState } from 'react';
 import { updateStuffedAnimal, type StuffedAnimalRequest, type StuffedAnimal } from '../api/stuffedAnimal';
+import { isSessionExpiredError } from '../api/client';
 import SeriesSelect from './SeriesSelect';
 import '../styles/StuffedAnimalForm.css';
 import '../styles/common.css';
 
 interface Props {
-    /** 編集対象のぬいぐるみ */
     animal: StuffedAnimal;
-    /** 更新成功時に呼ばれるコールバック */
     onSuccess: () => void;
-    /** キャンセル時に呼ばれるコールバック */
     onCancel: () => void;
 }
 
@@ -39,7 +37,8 @@ export default function StuffedAnimalEditForm({ animal, onSuccess, onCancel }: P
             };
             await updateStuffedAnimal(animal.id, request);
             onSuccess();
-        } catch {
+        } catch (err) {
+            if (isSessionExpiredError(err)) return;
             setError('更新に失敗しました（権限がないかもしれません）');
         } finally {
             setLoading(false);
@@ -84,11 +83,11 @@ export default function StuffedAnimalEditForm({ animal, onSuccess, onCancel }: P
                 {error && <p className="error-text">{error}</p>}
 
                 <div className="edit-form-actions">
-                    <button type="submit" className="btn-primary" disabled={loading}>
-                        {loading ? '更新中...' : '更新する'}
-                    </button>
                     <button type="button" className="btn-cancel" onClick={onCancel}>
                         キャンセル
+                    </button>
+                    <button type="submit" className="btn-primary" disabled={loading}>
+                        {loading ? '更新中...' : '更新する'}
                     </button>
                 </div>
             </form>

@@ -1,12 +1,4 @@
-import axios from 'axios';
-
-// BFFのベースURL（開発時はViteのプロキシ経由）
-const api = axios.create({
-    baseURL: '/api',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
+import { api } from './client';
 
 export interface AuthResponse {
     accessToken: string;

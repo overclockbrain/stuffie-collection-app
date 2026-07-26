@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { fetchStuffedAnimals, type StuffedAnimal } from '../api/stuffedAnimal';
+import { logout, isSessionExpiredError } from '../api/client';
 import StuffedAnimalList from '../components/StuffedAnimalList';
 import StuffedAnimalForm from '../components/StuffedAnimalForm';
 import StuffedAnimalEditForm from '../components/StuffedAnimalEditForm';
@@ -9,12 +10,9 @@ export default function StuffedAnimalPage() {
     const [animals, setAnimals] = useState<StuffedAnimal[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchName, setSearchName] = useState('');
-    // 追加モードかどうか（trueのときは追加フォームだけ表示する）
     const [isAdding, setIsAdding] = useState(false);
-    // 編集中のぬいぐるみ（編集してへんときはnull）
     const [editingAnimal, setEditingAnimal] = useState<StuffedAnimal | null>(null);
 
-    /** ぬいぐるみ一覧を取得する */
     const loadAnimals = async () => {
         setLoading(true);
         try {
@@ -22,7 +20,9 @@ export default function StuffedAnimalPage() {
                 name: searchName || undefined,
             });
             setAnimals(data);
-        } catch {
+        } catch (err) {
+            // セッション切れの場合はApp.tsxが自動でログイン画面に戻すのでalertは出さない
+            if (isSessionExpiredError(err)) return;
             alert('一覧の取得に失敗しました');
         } finally {
             setLoading(false);
@@ -33,14 +33,20 @@ export default function StuffedAnimalPage() {
         loadAnimals();
     }, []);
 
-    // 追加モード中は追加フォームだけを表示する（編集モードと同じ見せ方に統一）
+    const renderHeaderTitle = () => (
+        <div className="page-header">
+            <h1 className="page-title">🧸 stuffie-collection</h1>
+            <button className="btn-logout" onClick={logout}>
+                ログアウト
+            </button>
+        </div>
+    );
+
     if (isAdding) {
         return (
             <div className="page-container">
                 <div className="page-content">
-                    <div className="page-header">
-                        <h1 className="page-title">🧸 stuffie-collection</h1>
-                    </div>
+                    {renderHeaderTitle()}
                     <StuffedAnimalForm
                         onSuccess={() => {
                             setIsAdding(false);
@@ -53,14 +59,11 @@ export default function StuffedAnimalPage() {
         );
     }
 
-    // 編集モード中は編集フォームだけを表示する
     if (editingAnimal) {
         return (
             <div className="page-container">
                 <div className="page-content">
-                    <div className="page-header">
-                        <h1 className="page-title">🧸 stuffie-collection</h1>
-                    </div>
+                    {renderHeaderTitle()}
                     <StuffedAnimalEditForm
                         animal={editingAnimal}
                         onSuccess={() => {
@@ -77,15 +80,18 @@ export default function StuffedAnimalPage() {
     return (
         <div className="page-container">
             <div className="page-content">
-                {/* ヘッダー */}
                 <div className="page-header">
                     <h1 className="page-title">🧸 stuffie-collection</h1>
-                    <button className="btn-add" onClick={() => setIsAdding(true)}>
-                        ＋ 追加
-                    </button>
+                    <div className="page-header-actions">
+                        <button className="btn-add" onClick={() => setIsAdding(true)}>
+                            ＋ 追加
+                        </button>
+                        <button className="btn-logout" onClick={logout}>
+                            ログアウト
+                        </button>
+                    </div>
                 </div>
 
-                {/* 検索バー */}
                 <div className="search-bar">
                     <input
                         className="search-input"
@@ -98,10 +104,8 @@ export default function StuffedAnimalPage() {
                     </button>
                 </div>
 
-                {/* 件数 */}
                 <p className="result-count">{animals.length} 件</p>
 
-                {/* 一覧 */}
                 {loading ? (
                     <p className="loading-text">読み込み中...</p>
                 ) : (
