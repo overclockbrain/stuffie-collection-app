@@ -4,19 +4,23 @@ import '../styles/LoginPage.css';
 import '../styles/common.css';
 
 interface Props {
-    /** ログイン成功時に呼ばれるコールバック */
     onLoginSuccess: () => void;
+    sessionExpired?: boolean;
 }
 
-export default function LoginPage({ onLoginSuccess }: Props) {
+export default function LoginPage({ onLoginSuccess, sessionExpired }: Props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    // props由来の初期値をローカルstateにコピーし、ログイン試行時に消せるようにする
+    const [showSessionExpired, setShowSessionExpired] = useState(!!sessionExpired);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        // 新しくログインを試みた時点で「セッションが切れたで」の通知は消す
+        setShowSessionExpired(false);
         setLoading(true);
 
         try {
@@ -24,8 +28,7 @@ export default function LoginPage({ onLoginSuccess }: Props) {
             localStorage.setItem('accessToken', res.accessToken);
             onLoginSuccess();
         } catch {
-            // バックのエラー詳細は返さずフロント固定のメッセージにする（セキュリティ対策）
-            setError('メールアドレスかパスワードが違うで！');
+            setError('メールアドレスかパスワードが違います。');
         } finally {
             setLoading(false);
         }
@@ -36,6 +39,12 @@ export default function LoginPage({ onLoginSuccess }: Props) {
             <div className="login-card">
                 <h1 className="login-title">🧸 stuffie-collection</h1>
                 <h2 className="login-subtitle">ログイン</h2>
+
+                {showSessionExpired && (
+                    <p className="session-expired-notice">
+                        セッションが切れました。再度ログインしてください。
+                    </p>
+                )}
 
                 <form onSubmit={handleSubmit} className="login-form">
                     <div className="field">

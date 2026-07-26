@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react';
 import { fetchSeries, createSeries, deleteSeries, type Series } from '../api/series';
+import { isSessionExpiredError } from '../api/client';
 import '../styles/SeriesSelect.css';
 
 interface Props {
-    /** 選択中のシリーズID（未選択はnull） */
     value: number | null;
-    /** 選択変更時のコールバック */
     onChange: (seriesId: number | null) => void;
 }
 
-/** プルダウンの特殊値：新規シリーズ追加モード */
 const ADD_NEW_VALUE = '__ADD_NEW__';
 
 export default function SeriesSelect({ value, onChange }: Props) {
@@ -19,13 +17,13 @@ export default function SeriesSelect({ value, onChange }: Props) {
     const [newSeriesName, setNewSeriesName] = useState('');
     const [error, setError] = useState('');
 
-    /** シリーズ一覧を取得する */
     const loadSeries = async () => {
         setLoading(true);
         try {
             const data = await fetchSeries();
             setSeriesList(data);
-        } catch {
+        } catch (err) {
+            if (isSessionExpiredError(err)) return;
             setError('シリーズ一覧の取得に失敗しました');
         } finally {
             setLoading(false);
@@ -36,7 +34,6 @@ export default function SeriesSelect({ value, onChange }: Props) {
         loadSeries();
     }, []);
 
-    /** プルダウン選択時の処理 */
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selected = e.target.value;
         if (selected === ADD_NEW_VALUE) {
@@ -46,7 +43,6 @@ export default function SeriesSelect({ value, onChange }: Props) {
         onChange(selected === '' ? null : Number(selected));
     };
 
-    /** 新しいシリーズを登録する */
     const handleAddSeries = async () => {
         if (!newSeriesName.trim()) return;
         setError('');
@@ -56,12 +52,12 @@ export default function SeriesSelect({ value, onChange }: Props) {
             onChange(created.id);
             setNewSeriesName('');
             setIsAdding(false);
-        } catch {
+        } catch (err) {
+            if (isSessionExpiredError(err)) return;
             setError('このシリーズ名は既に使われているかもしれません');
         }
     };
 
-    /** 選択中のシリーズを削除する */
     const handleDeleteSeries = async () => {
         if (value === null) return;
         const target = seriesList.find((s) => s.id === value);
@@ -72,7 +68,8 @@ export default function SeriesSelect({ value, onChange }: Props) {
             await deleteSeries(value);
             onChange(null);
             await loadSeries();
-        } catch {
+        } catch (err) {
+            if (isSessionExpiredError(err)) return;
             alert('削除に失敗しました（権限がないかもしれません）');
         }
     };

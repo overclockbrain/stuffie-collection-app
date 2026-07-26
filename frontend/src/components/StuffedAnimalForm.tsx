@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { createStuffedAnimal, checkDuplicate, type StuffedAnimalRequest, type StuffedAnimal } from '../api/stuffedAnimal';
+import { isSessionExpiredError } from '../api/client';
 import SeriesSelect from './SeriesSelect';
 import '../styles/StuffedAnimalForm.css';
 import '../styles/common.css';
 
 interface Props {
-    /** 登録成功時に呼ばれるコールバック */
     onSuccess: () => void;
-    /** キャンセル時に呼ばれるコールバック */
     onCancel: () => void;
 }
 
@@ -22,7 +21,6 @@ export default function StuffedAnimalForm({ onSuccess, onCancel }: Props) {
     const [error, setError] = useState('');
     const [duplicates, setDuplicates] = useState<StuffedAnimal[]>([]);
 
-    /** 登録前にダブりチェックして確認を取る */
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
@@ -41,20 +39,21 @@ export default function StuffedAnimalForm({ onSuccess, onCancel }: Props) {
                 return;
             }
             await register();
-        } catch {
+        } catch (err) {
+            if (isSessionExpiredError(err)) return;
             setError('登録に失敗しました');
         } finally {
             setLoading(false);
         }
     };
 
-    /** ダブりを無視して強制登録 */
     const handleForceRegister = async () => {
         setLoading(true);
         setDuplicates([]);
         try {
             await register();
-        } catch {
+        } catch (err) {
+            if (isSessionExpiredError(err)) return;
             setError('登録に失敗しました');
         } finally {
             setLoading(false);
@@ -117,7 +116,6 @@ export default function StuffedAnimalForm({ onSuccess, onCancel }: Props) {
 
                 {error && <p className="error-text">{error}</p>}
 
-                {/* ダブり警告 */}
                 {duplicates.length > 0 && (
                     <div className="duplicate-warning">
                         <p className="duplicate-warning-title">⚠️ 似たぬいぐるみが {duplicates.length} 件あるで！</p>
@@ -133,11 +131,11 @@ export default function StuffedAnimalForm({ onSuccess, onCancel }: Props) {
 
                 {duplicates.length === 0 && (
                     <div className="edit-form-actions">
-                        <button type="submit" className="btn-primary" disabled={loading}>
-                            {loading ? '登録中...' : '登録する'}
-                        </button>
                         <button type="button" className="btn-cancel" onClick={onCancel}>
                             キャンセル
+                        </button>
+                        <button type="submit" className="btn-primary" disabled={loading}>
+                            {loading ? '登録中...' : '登録する'}
                         </button>
                     </div>
                 )}
