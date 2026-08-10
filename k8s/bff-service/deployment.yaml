@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bff-service
+  namespace: stuffie-collection
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff-service
+  template:
+    metadata:
+      labels:
+        app: bff-service
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+        - name: bff-service
+          image: 192.168.40.246:5050/ikuchans/stuffie-collection-app/bff-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            # k3s内はServiceの名前がそのままホスト名として使える
+            - name: STUFFED_ANIMAL_SERVICE_HOST
+              value: stuffed-animal-service
+            - name: STUFFED_ANIMAL_SERVICE_GRPC_PORT
+              value: "9091"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: JWT_SECRET
+            - name: CORS_ALLOWED_ORIGINS
+              value: "http://stuffie-collection.local"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 15
