@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff-service
+  namespace: stuffie-collection
+spec:
+  selector:
+    app: bff-service
+  ports:
+    - port: 8080
+      targetPort: 8080
+  # ClusterIP（デフォルト）: 外部からはIngress経由でのみアクセスされる。

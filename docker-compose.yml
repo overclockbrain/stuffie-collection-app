@@ -17,6 +17,7 @@ services:
       retries: 5
 
   stuffed-animal-service:
+    image: 192.168.40.246:5050/ikuchans/stuffie-collection-app/stuffed-animal-service:latest
     build:
       context: .
       dockerfile: stuffed-animal-service/Dockerfile
@@ -38,12 +39,12 @@ services:
         condition: service_healthy
 
   bff-service:
+    image: 192.168.40.246:5050/ikuchans/stuffie-collection-app/bff-service:latest
     build:
       context: .
       dockerfile: bff-service/Dockerfile
     container_name: stuffie-bff-service
     environment:
-      # コンテナ間はサービス名で名前解決できるため localhost ではなくこちらを指定
       STUFFED_ANIMAL_SERVICE_HOST: stuffed-animal-service
       STUFFED_ANIMAL_SERVICE_GRPC_PORT: 9091
       JWT_SECRET: stuffie-secret-key-must-be-at-least-32-characters-long
@@ -54,6 +55,7 @@ services:
       - stuffed-animal-service
 
   frontend:
+    image: 192.168.40.246:5050/ikuchans/stuffie-collection-app/frontend:latest
     build:
       context: ./frontend
       dockerfile: Dockerfile

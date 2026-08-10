@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stuffie-collection-ingress
+  namespace: stuffie-collection
+spec:
+  # k3sのデフォルトIngress ControllerはTraefik（nginxではない）
+  ingressClassName: traefik
+  rules:
+    - host: stuffie-collection.local
+      http:
+        paths:
+          # frontendのnginxが/apiをbff-serviceに内部プロキシしてくれるため、
+          # Ingressはすべてfrontendへ流すだけでよい
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
