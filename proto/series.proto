@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package stuffie.series;
+
+import "common.proto";
+
+option java_multiple_files = true;
+option java_package = "com.stuffie.grpc.series";
+
+// シリーズマスタ管理サービス
+service SeriesService {
+  // シリーズ一覧取得（プルダウン表示用）
+  rpc GetSeriesList (stuffie.common.Empty) returns (GetSeriesListResponse);
+  // シリーズ登録
+  rpc CreateSeries (CreateSeriesRequest) returns (SeriesMessage);
+  // シリーズ更新（本人かADMINのみ）
+  rpc UpdateSeries (UpdateSeriesRequest) returns (SeriesMessage);
+  // シリーズ削除（本人かADMINのみ）
+  rpc DeleteSeries (DeleteSeriesRequest) returns (stuffie.common.Empty);
+}
+
+message SeriesMessage {
+  int64 id = 1;
+  string name = 2;
+  int64 created_by = 3;
+  string created_at = 4;
+}
+
+message GetSeriesListResponse {
+  repeated SeriesMessage series = 1;
+}
+
+message CreateSeriesRequest {
+  string name = 1;
+  // BFFでJWT検証済みのユーザーのメールアドレスを渡す
+  string user_email = 2;
+}
+
+message UpdateSeriesRequest {
+  int64 id = 1;
+  string name = 2;
+  string user_email = 3;
+}
+
+message DeleteSeriesRequest {
+  int64 id = 1;
+  string user_email = 2;
+}

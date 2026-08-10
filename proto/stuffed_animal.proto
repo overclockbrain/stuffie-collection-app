@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package stuffie.stuffedanimal;
+
+import "common.proto";
+
+option java_multiple_files = true;
+option java_package = "com.stuffie.grpc.stuffedanimal";
+
+// ぬいぐるみ管理サービス
+service StuffedAnimalService {
+  // 一覧取得（絞り込み可能）
+  rpc GetAnimals (GetAnimalsRequest) returns (GetAnimalsResponse);
+  // 1件取得
+  rpc GetAnimal (GetAnimalRequest) returns (StuffedAnimalMessage);
+  // 登録
+  rpc CreateAnimal (CreateAnimalRequest) returns (StuffedAnimalMessage);
+  // 更新（本人かADMINのみ）
+  rpc UpdateAnimal (UpdateAnimalRequest) returns (StuffedAnimalMessage);
+  // 削除（本人かADMINのみ）
+  rpc DeleteAnimal (DeleteAnimalRequest) returns (stuffie.common.Empty);
+  // ダブりチェック
+  rpc CheckDuplicate (CheckDuplicateRequest) returns (CheckDuplicateResponse);
+}
+
+message StuffedAnimalMessage {
+  int64 id = 1;
+  string name = 2;
+  optional int64 series_id = 3;
+  optional string series_name = 4;
+  optional string character = 5;
+  optional string purchase_date = 6;
+  optional string purchase_place = 7;
+  optional string image_url = 8;
+  optional string notes = 9;
+  int64 created_by = 10;
+  int64 updated_by = 11;
+  string created_at = 12;
+  string updated_at = 13;
+}
+
+message GetAnimalsRequest {
+  optional string name = 1;
+  optional int64 series_id = 2;
+  optional string character = 3;
+}
+
+message GetAnimalsResponse {
+  repeated StuffedAnimalMessage animals = 1;
+}
+
+message GetAnimalRequest {
+  int64 id = 1;
+}
+
+message CreateAnimalRequest {
+  string name = 1;
+  optional int64 series_id = 2;
+  optional string character = 3;
+  optional string purchase_date = 4;
+  optional string purchase_place = 5;
+  optional string image_url = 6;
+  optional string notes = 7;
+  // BFFでJWT検証済みのユーザーのメールアドレスを渡す
+  string user_email = 8;
+}
+
+message UpdateAnimalRequest {
+  int64 id = 1;
+  string name = 2;
+  optional int64 series_id = 3;
+  optional string character = 4;
+  optional string purchase_date = 5;
+  optional string purchase_place = 6;
+  optional string image_url = 7;
+  optional string notes = 8;
+  string user_email = 9;
+}
+
+message DeleteAnimalRequest {
+  int64 id = 1;
+  string user_email = 2;
+}
+
+message CheckDuplicateRequest {
+  string name = 1;
+  optional int64 series_id = 2;
+  optional string character = 3;
+}
+
+message CheckDuplicateResponse {
+  repeated StuffedAnimalMessage duplicates = 1;
+}

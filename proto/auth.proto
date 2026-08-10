@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package stuffie.auth;
+
+option java_multiple_files = true;
+option java_package = "com.stuffie.grpc.auth";
+
+// 認証サービス
+service AuthService {
+  // ユーザー登録
+  rpc Register (RegisterRequest) returns (AuthResponse);
+  // ログイン
+  rpc Login (LoginRequest) returns (AuthResponse);
+}
+
+message RegisterRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message AuthResponse {
+  string access_token = 1;
+  string token_type = 2;
+  int64 expires_in = 3;
+}

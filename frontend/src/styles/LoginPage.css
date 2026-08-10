@@ -1,0 +1,53 @@
+/* ─────────────────────────────────────────
+   LoginPage
+───────────────────────────────────────── */
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fdf6f0;
+}
+
+.login-card {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.login-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 4px;
+    color: #333;
+}
+
+.login-subtitle {
+    text-align: center;
+    font-size: 16px;
+    color: #888;
+    margin-bottom: 32px;
+    font-weight: normal;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* セッション切れ通知 */
+.session-expired-notice {
+    background-color: #fff8e1;
+    border: 1px solid #f9a825;
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: #f57f17;
+    font-size: 13px;
+    margin-bottom: 16px;
+    text-align: center;
+}

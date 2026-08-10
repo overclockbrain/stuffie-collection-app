@@ -1,11 +1,16 @@
-spring:
-  security:
-    jwt:
-      secret: ${JWT_SECRET:your-secret-key-change-in-production}
-      expiration: 3600
-
-stuffed-animal-service:
-  url: ${STUFFED_ANIMAL_SERVICE_URL:http://stuffed-animal-service:8081}
-
 server:
   port: 8080
+
+# stuffed-animal-serviceへのgRPC接続設定
+grpc:
+  client:
+    stuffed-animal-service:
+      address: "static://${STUFFED_ANIMAL_SERVICE_HOST:localhost}:${STUFFED_ANIMAL_SERVICE_GRPC_PORT:9091}"
+      negotiationType: plaintext
+
+# JWTの検証用（stuffed-animal-serviceと同じ秘密鍵を指定する必要がある）
+jwt:
+  secret: ${JWT_SECRET:stuffie-secret-key-must-be-at-least-32-characters-long}
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}

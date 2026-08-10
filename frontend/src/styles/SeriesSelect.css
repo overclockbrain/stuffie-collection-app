@@ -1,0 +1,47 @@
+/* ─────────────────────────────────────────
+   SeriesSelect
+───────────────────────────────────────── */
+
+.series-select-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.series-select-row {
+    display: flex;
+    gap: 8px;
+}
+
+.series-select {
+    flex: 1;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.series-delete-btn {
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.series-delete-btn:hover {
+    background-color: #fff0f0;
+}
+
+.series-add-row {
+    display: flex;
+    gap: 8px;
+}
+
+.series-add-row .input {
+    flex: 1;
+}
+
+.series-add-row .btn-secondary {
+    white-space: nowrap;
+}

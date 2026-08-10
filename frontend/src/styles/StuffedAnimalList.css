@@ -1,0 +1,152 @@
+/* ─────────────────────────────────────────
+   StuffedAnimalList
+───────────────────────────────────────── */
+
+.animal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+/* 超大画面は5カラム */
+@media (min-width: 1440px) {
+    .animal-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* PCは4カラム */
+@media (min-width: 1024px) {
+    .animal-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* タブレットは2カラム */
+@media (min-width: 600px) and (max-width: 1023px) {
+    .animal-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* スマホは1カラム */
+@media (max-width: 599px) {
+    .animal-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.animal-card {
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.animal-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.animal-image-area {
+    background-color: #fdf6f0;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.animal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.animal-no-image {
+    font-size: 48px;
+}
+
+.animal-info {
+    padding: 16px;
+    flex: 1;
+}
+
+.animal-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.animal-badge {
+    display: inline-block;
+    background-color: #fde8d8;
+    color: #e8956d;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.animal-detail {
+    font-size: 13px;
+    color: #666;
+    margin: 2px 0;
+}
+
+.animal-notes {
+    font-size: 12px;
+    color: #888;
+    margin-top: 8px;
+    font-style: italic;
+}
+
+/* 編集・削除ボタンの並び */
+.animal-actions {
+    display: flex;
+    gap: 8px;
+    margin: 0 16px 16px;
+}
+
+.btn-edit {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #555;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.2s;
+}
+
+.btn-edit:hover {
+    background-color: #f5f5f5;
+}
+
+.btn-delete {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #e74c3c;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.2s;
+}
+
+.btn-delete:hover {
+    background-color: #fff0f0;
+}
+
+.animal-empty {
+    text-align: center;
+    color: #888;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 16px;
+}

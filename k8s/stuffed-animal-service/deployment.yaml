@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stuffed-animal-service
+  namespace: stuffie-collection
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stuffed-animal-service
+  template:
+    metadata:
+      labels:
+        app: stuffed-animal-service
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+        - name: stuffed-animal-service
+          image: 192.168.40.246:5050/ikuchans/stuffie-collection-app/stuffed-animal-service:latest
+          ports:
+            - containerPort: 8081
+              name: http
+            - containerPort: 9091
+              name: grpc
+          env:
+            - name: DB_HOST
+              value: postgres
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_DB
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: JWT_SECRET
+            - name: CORS_ALLOWED_ORIGINS
+              value: "http://stuffie-collection.local"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 40
+            periodSeconds: 15

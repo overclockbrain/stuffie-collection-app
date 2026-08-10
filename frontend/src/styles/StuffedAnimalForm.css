@@ -1,0 +1,106 @@
+/* ─────────────────────────────────────────
+   StuffedAnimalForm / StuffedAnimalEditForm
+───────────────────────────────────────── */
+
+.form-container {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    margin-bottom: 24px;
+}
+
+.form-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* 登録・更新フォーム共通のボタン配置（キャンセル：左 / メインアクション：右） */
+.edit-form-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.edit-form-actions .btn-primary {
+    flex: 2;
+}
+
+.edit-form-actions .btn-cancel {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #555;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.2s;
+}
+
+.edit-form-actions .btn-cancel:hover {
+    background-color: #f5f5f5;
+}
+
+/* ダブり警告 */
+.duplicate-warning {
+    background-color: #fff8e1;
+    border: 1px solid #f9a825;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.duplicate-warning-title {
+    font-weight: bold;
+    color: #f57f17;
+    margin-bottom: 8px;
+}
+
+.duplicate-warning-item {
+    font-size: 13px;
+    color: #555;
+    margin: 2px 0;
+}
+
+.duplicate-warning-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.btn-force {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    background-color: #e8956d;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-force:hover {
+    background-color: #d4805a;
+}
+
+.btn-cancel {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #555;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-cancel:hover {
+    background-color: #f5f5f5;
+}
