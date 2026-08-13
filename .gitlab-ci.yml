@@ -56,7 +56,7 @@ build-push:stuffed-animal-service:
 # ─────────────────────────────────────────
 deploy:k3s:
   stage: deploy
-  image: bitnami/kubectl:latest
+  image: alpine/k8s:1.30.0
   script:
     - mkdir -p ~/.kube
     - echo "$KUBECONFIG_CONTENT" > ~/.kube/config
