@@ -1,0 +1,76 @@
+stages:
+  - build
+  - push
+  - deploy
+
+variables:
+  # GitLab Container Registryのベースパス（GitLabが自動で用意してくれる）
+  IMAGE_BASE: $CI_REGISTRY_IMAGE
+  IMAGE_TAG: $CI_COMMIT_SHORT_SHA
+
+# ─────────────────────────────────────────
+# BUILD & PUSH（3サービス分をまとめてテンプレート化）
+# ─────────────────────────────────────────
+.build_push_template: &build_push_template
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  only:
+    - master
+    - develop
+
+build-push:frontend:
+  <<: *build_push_template
+  script:
+    - docker build -f frontend/Dockerfile -t $IMAGE_BASE/frontend:$IMAGE_TAG ./frontend
+    - docker push $IMAGE_BASE/frontend:$IMAGE_TAG
+    - docker tag $IMAGE_BASE/frontend:$IMAGE_TAG $IMAGE_BASE/frontend:latest
+    - docker push $IMAGE_BASE/frontend:latest
+
+build-push:bff-service:
+  <<: *build_push_template
+  script:
+    # bff-serviceは ../proto を参照するため、リポジトリルートをビルドコンテキストにする
+    - docker build -f bff-service/Dockerfile -t $IMAGE_BASE/bff-service:$IMAGE_TAG .
+    - docker push $IMAGE_BASE/bff-service:$IMAGE_TAG
+    - docker tag $IMAGE_BASE/bff-service:$IMAGE_TAG $IMAGE_BASE/bff-service:latest
+    - docker push $IMAGE_BASE/bff-service:latest
+
+build-push:stuffed-animal-service:
+  <<: *build_push_template
+  script:
+    - docker build -f stuffed-animal-service/Dockerfile -t $IMAGE_BASE/stuffed-animal-service:$IMAGE_TAG .
+    - docker push $IMAGE_BASE/stuffed-animal-service:$IMAGE_TAG
+    - docker tag $IMAGE_BASE/stuffed-animal-service:$IMAGE_TAG $IMAGE_BASE/stuffed-animal-service:latest
+    - docker push $IMAGE_BASE/stuffed-animal-service:latest
+
+# ─────────────────────────────────────────
+# DEPLOY（k3sへ反映）
+# ─────────────────────────────────────────
+deploy:k3s:
+  stage: deploy
+  image: bitnami/kubectl:latest
+  script:
+    # KUBECONFIG_CONTENT はCI/CD変数に登録したkubeconfigの中身（後述）
+    - mkdir -p ~/.kube
+    - echo "$KUBECONFIG_CONTENT" > ~/.kube/config
+    - kubectl apply -f k8s/namespace.yaml
+    - kubectl apply -f k8s/postgres/
+    - kubectl apply -f k8s/stuffed-animal-service/
+    - kubectl apply -f k8s/bff-service/
+    - kubectl apply -f k8s/frontend/
+    - kubectl apply -f k8s/ingress.yaml
+    # 最新イメージに更新（タグ固定でロールアウトを確実に発生させる）
+    - kubectl set image deployment/frontend frontend=$IMAGE_BASE/frontend:$IMAGE_TAG -n stuffie-collection
+    - kubectl set image deployment/bff-service bff-service=$IMAGE_BASE/bff-service:$IMAGE_TAG -n stuffie-collection
+    - kubectl set image deployment/stuffed-animal-service stuffed-animal-service=$IMAGE_BASE/stuffed-animal-service:$IMAGE_TAG -n stuffie-collection
+    - kubectl rollout status deployment/frontend -n stuffie-collection
+    - kubectl rollout status deployment/bff-service -n stuffie-collection
+    - kubectl rollout status deployment/stuffed-animal-service -n stuffie-collection
+  only:
+    - master
+  environment:
+    name: production
