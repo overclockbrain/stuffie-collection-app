@@ -4,7 +4,6 @@ stages:
   - deploy
 
 variables:
-  # GitLab Container Registryのベースパス（GitLabが自動で用意してくれる）
   IMAGE_BASE: $CI_REGISTRY_IMAGE
   IMAGE_TAG: $CI_COMMIT_SHORT_SHA
 
@@ -15,7 +14,12 @@ variables:
   stage: build
   image: docker:24
   services:
-    - docker:24-dind
+    # GitLab RegistryがHTTP(TLSなし)のため、dind自体にinsecure-registryを教える必要がある
+    - name: docker:24-dind
+      command: ["--insecure-registry=192.168.40.246:5050"]
+  variables:
+    # dindがTLS証明書を要求しないようにする（insecure運用のため）
+    DOCKER_TLS_CERTDIR: ""
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   only:
@@ -54,7 +58,6 @@ deploy:k3s:
   stage: deploy
   image: bitnami/kubectl:latest
   script:
-    # KUBECONFIG_CONTENT はCI/CD変数に登録したkubeconfigの中身（後述）
     - mkdir -p ~/.kube
     - echo "$KUBECONFIG_CONTENT" > ~/.kube/config
     - kubectl apply -f k8s/namespace.yaml
@@ -63,7 +66,6 @@ deploy:k3s:
     - kubectl apply -f k8s/bff-service/
     - kubectl apply -f k8s/frontend/
     - kubectl apply -f k8s/ingress.yaml
-    # 最新イメージに更新（タグ固定でロールアウトを確実に発生させる）
     - kubectl set image deployment/frontend frontend=$IMAGE_BASE/frontend:$IMAGE_TAG -n stuffie-collection
     - kubectl set image deployment/bff-service bff-service=$IMAGE_BASE/bff-service:$IMAGE_TAG -n stuffie-collection
     - kubectl set image deployment/stuffed-animal-service stuffed-animal-service=$IMAGE_BASE/stuffed-animal-service:$IMAGE_TAG -n stuffie-collection
