@@ -8,17 +8,17 @@
     gap: 16px;
 }
 
-/* 超大画面は5カラム */
-@media (min-width: 1440px) {
-    .animal-grid {
-        grid-template-columns: repeat(5, 1fr);
-    }
-}
-
 /* PCは4カラム */
 @media (min-width: 1024px) {
     .animal-grid {
         grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* 超大画面は5カラム */
+@media (min-width: 1440px) {
+    .animal-grid {
+        grid-template-columns: repeat(5, 1fr);
     }
 }
 
@@ -29,10 +29,11 @@
     }
 }
 
-/* スマホは1カラム */
+/* スマホは2カラム（1カラムだと1件あたりの主張が強すぎるため） */
 @media (max-width: 599px) {
     .animal-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 }
 
@@ -43,6 +44,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    text-align: left;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -59,6 +61,13 @@
     justify-content: center;
 }
 
+/* スマホ2カラム時は画像エリアを少し低くしてバランスを取る */
+@media (max-width: 599px) {
+    .animal-image-area {
+        height: 110px;
+    }
+}
+
 .animal-image {
     width: 100%;
     height: 100%;
@@ -69,16 +78,35 @@
     font-size: 48px;
 }
 
+@media (max-width: 599px) {
+    .animal-no-image {
+        font-size: 36px;
+    }
+}
+
 .animal-info {
     padding: 16px;
     flex: 1;
+}
+
+@media (max-width: 599px) {
+    .animal-info {
+        padding: 10px;
+    }
 }
 
 .animal-name {
     font-size: 16px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 8px;
+    margin: 0 0 8px;
+}
+
+@media (max-width: 599px) {
+    .animal-name {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
 }
 
 .animal-badge {
@@ -91,10 +119,24 @@
     margin-bottom: 8px;
 }
 
+@media (max-width: 599px) {
+    .animal-badge {
+        font-size: 10px;
+        padding: 1px 8px;
+        margin-bottom: 4px;
+    }
+}
+
 .animal-detail {
     font-size: 13px;
     color: #666;
     margin: 2px 0;
+}
+
+@media (max-width: 599px) {
+    .animal-detail {
+        font-size: 11px;
+    }
 }
 
 .animal-notes {
@@ -104,11 +146,29 @@
     font-style: italic;
 }
 
+@media (max-width: 599px) {
+    .animal-notes {
+        font-size: 10px;
+        /* スマホの狭い幅では長いメモが場所を取りすぎるため2行で省略する */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
 /* 編集・削除ボタンの並び */
 .animal-actions {
     display: flex;
     gap: 8px;
     margin: 0 16px 16px;
+}
+
+@media (max-width: 599px) {
+    .animal-actions {
+        margin: 0 10px 10px;
+        gap: 6px;
+    }
 }
 
 .btn-edit {
@@ -141,6 +201,14 @@
 
 .btn-delete:hover {
     background-color: #fff0f0;
+}
+
+@media (max-width: 599px) {
+    .btn-edit,
+    .btn-delete {
+        padding: 6px;
+        font-size: 11px;
+    }
 }
 
 .animal-empty {
