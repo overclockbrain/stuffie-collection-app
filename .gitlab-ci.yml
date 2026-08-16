@@ -14,11 +14,9 @@ variables:
   stage: build
   image: docker:24
   services:
-    # GitLab RegistryがHTTP(TLSなし)のため、dind自体にinsecure-registryを教える必要がある
     - name: docker:24-dind
       command: ["--insecure-registry=192.168.40.246:5050"]
   variables:
-    # dindがTLS証明書を要求しないようにする（insecure運用のため）
     DOCKER_TLS_CERTDIR: ""
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
@@ -37,7 +35,6 @@ build-push:frontend:
 build-push:bff-service:
   <<: *build_push_template
   script:
-    # bff-serviceは ../proto を参照するため、リポジトリルートをビルドコンテキストにする
     - docker build -f bff-service/Dockerfile -t $IMAGE_BASE/bff-service:$IMAGE_TAG .
     - docker push $IMAGE_BASE/bff-service:$IMAGE_TAG
     - docker tag $IMAGE_BASE/bff-service:$IMAGE_TAG $IMAGE_BASE/bff-service:latest
@@ -62,6 +59,7 @@ deploy:k3s:
     - echo "$KUBECONFIG_CONTENT" > ~/.kube/config
     - kubectl apply -f k8s/namespace.yaml
     - kubectl apply -f k8s/postgres/
+    - kubectl apply -f k8s/minio/
     - kubectl apply -f k8s/stuffed-animal-service/
     - kubectl apply -f k8s/bff-service/
     - kubectl apply -f k8s/frontend/
