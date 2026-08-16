@@ -27,8 +27,8 @@ public class ImageController {
 
     private final ImageGrpcClient imageGrpcClient;
 
-    /** アップロードを許可する最大サイズ（10MB）。これを超えたら早期に弾く。 */
-    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024;
+    /** アップロードを許可する最大サイズ（15MB）。これを超えたら早期に弾く。 */
+    private static final long MAX_FILE_SIZE = 15 * 1024 * 1024;
 
     @PostMapping("/{id}/image")
     public ResponseEntity<?> uploadImage(
@@ -40,7 +40,7 @@ public class ImageController {
             return ResponseEntity.badRequest().body(Map.of("message", "ファイルが選択されていません"));
         }
         if (file.getSize() > MAX_FILE_SIZE) {
-            return ResponseEntity.badRequest().body(Map.of("message", "ファイルサイズが大きすぎます（10MBまで）"));
+            return ResponseEntity.badRequest().body(Map.of("message", "ファイルサイズが大きすぎます（15MBまで）"));
         }
 
         try {
