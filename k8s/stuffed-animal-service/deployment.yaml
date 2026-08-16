@@ -47,7 +47,7 @@ spec:
                   name: postgres-secret
                   key: JWT_SECRET
             - name: CORS_ALLOWED_ORIGINS
-              value: "http://stuffie-collection.local"
+              value: "http://192.168.40.246"
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
             - name: MINIO_ENDPOINT
@@ -65,7 +65,7 @@ spec:
             - name: MINIO_BUCKET_NAME
               value: "stuffie-images"
             - name: MINIO_PUBLIC_URL_BASE
-              value: "http://stuffie-collection.local/stuffie-images"
+              value: "http://192.168.40.246/stuffie-images"
           readinessProbe:
             httpGet:
               path: /actuator/health

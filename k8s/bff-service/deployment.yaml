@@ -32,7 +32,7 @@ spec:
                   name: postgres-secret
                   key: JWT_SECRET
             - name: CORS_ALLOWED_ORIGINS
-              value: "http://stuffie-collection.local"
+              value: "http://192.168.40.246"
           readinessProbe:
             httpGet:
               path: /actuator/health

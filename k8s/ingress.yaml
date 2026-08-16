@@ -6,8 +6,9 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: stuffie-collection.local
-      http:
+    # host を指定しないことで、IPアドレス・どんなホスト名でのアクセスも受け付ける。
+    # スマホ（iPhone等）は/etc/hostsを編集できないため、この設定で対応する。
+    - http:
         paths:
           # 画像は公開バケットへ直接ルーティングする（frontendを経由させない）
           # 順序が重要: より具体的なパスを先に書く（Traefikは上から順にマッチを試みるため）
