@@ -107,6 +107,22 @@ public class StuffedAnimalService {
     }
 
     /**
+     * 画像アップロード後にimageUrlだけを更新する。
+     * updateと同様、自分が登録したデータかADMINのみ実行可能。
+     */
+    @Transactional
+    public void updateImageUrl(Long id, String imageUrl, String userEmail) {
+        User user = getUserByEmail(userEmail);
+        StuffedAnimal entity = getEntityById(id);
+
+        checkOwnerOrAdmin(entity, user);
+
+        entity.setImageUrl(imageUrl);
+        entity.setUpdatedBy(user);
+        stuffedAnimalRepository.save(entity);
+    }
+
+    /**
      * ぬいぐるみを削除する。
      * 自分が登録したデータかADMINのみ削除可能。
      *

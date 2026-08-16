@@ -4,14 +4,21 @@ metadata:
   name: stuffie-collection-ingress
   namespace: stuffie-collection
 spec:
-  # k3sのデフォルトIngress ControllerはTraefik（nginxではない）
   ingressClassName: traefik
   rules:
     - host: stuffie-collection.local
       http:
         paths:
-          # frontendのnginxが/apiをbff-serviceに内部プロキシしてくれるため、
-          # Ingressはすべてfrontendへ流すだけでよい
+          # 画像は公開バケットへ直接ルーティングする（frontendを経由させない）
+          # 順序が重要: より具体的なパスを先に書く（Traefikは上から順にマッチを試みるため）
+          - path: /stuffie-images
+            pathType: Prefix
+            backend:
+              service:
+                name: minio
+                port:
+                  number: 9000
+          # それ以外は全部frontendへ（frontendのnginxが/apiをbff-serviceに内部プロキシする）
           - path: /
             pathType: Prefix
             backend:
