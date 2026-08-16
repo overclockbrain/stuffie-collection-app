@@ -21,7 +21,6 @@ export default function StuffedAnimalPage() {
             });
             setAnimals(data);
         } catch (err) {
-            // セッション切れの場合はApp.tsxが自動でログイン画面に戻すのでalertは出さない
             if (isSessionExpiredError(err)) return;
             alert('一覧の取得に失敗しました');
         } finally {
