@@ -21,6 +21,8 @@ service StuffedAnimalService {
   rpc DeleteAnimal (DeleteAnimalRequest) returns (stuffie.common.Empty);
   // ダブりチェック
   rpc CheckDuplicate (CheckDuplicateRequest) returns (CheckDuplicateResponse);
+  // 画像アップロード（チャンク分割してストリーミング送信、本人かADMINのみ）
+  rpc UploadImage (stream UploadImageChunk) returns (UploadImageResponse);
 }
 
 message StuffedAnimalMessage {
@@ -61,7 +63,6 @@ message CreateAnimalRequest {
   optional string purchase_place = 5;
   optional string image_url = 6;
   optional string notes = 7;
-  // BFFでJWT検証済みのユーザーのメールアドレスを渡す
   string user_email = 8;
 }
 
@@ -90,4 +91,24 @@ message CheckDuplicateRequest {
 
 message CheckDuplicateResponse {
   repeated StuffedAnimalMessage duplicates = 1;
+}
+
+// ─────────────────────────────────────────
+// 画像アップロード用メッセージ
+// ─────────────────────────────────────────
+
+// クライアントはこのメッセージを繰り返し送信する（streaming）。
+// 1個目のチャンクにはメタ情報（animal_id・user_email・content_type）を含め、
+// 以降は data のみを送り続ける想定。
+message UploadImageChunk {
+  int64 animal_id = 1;
+  bytes data = 2;
+  // 最初のチャンクにのみ設定する（2個目以降は空文字でよい）
+  string user_email = 3;
+  // 最初のチャンクにのみ設定する（例: image/jpeg）
+  string content_type = 4;
+}
+
+message UploadImageResponse {
+  string image_url = 1;
 }
