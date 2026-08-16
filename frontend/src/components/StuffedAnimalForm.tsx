@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { createStuffedAnimal, checkDuplicate, type StuffedAnimalRequest, type StuffedAnimal } from '../api/stuffedAnimal';
+import { uploadAnimalImage } from '../api/image';
 import { isSessionExpiredError } from '../api/client';
 import SeriesSelect from './SeriesSelect';
+import ImageSelectPreview from './ImageSelectPreview';
 import '../styles/StuffedAnimalForm.css';
 import '../styles/common.css';
 
 interface Props {
+    // 登録（＋画像アップロードがあればそれも完了した後）に呼ばれる。
+    // 一覧再読み込みのためのコールバックとして親から渡される。
     onSuccess: () => void;
     onCancel: () => void;
 }
@@ -17,6 +21,8 @@ export default function StuffedAnimalForm({ onSuccess, onCancel }: Props) {
     const [purchasePlace, setPurchasePlace] = useState('');
     const [purchaseDate, setPurchaseDate] = useState('');
     const [notes, setNotes] = useState('');
+    // 登録ボタンを押すまでは実際にはアップロードせず、選んだファイルだけ保持しておく
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [duplicates, setDuplicates] = useState<StuffedAnimal[]>([]);
@@ -69,13 +75,22 @@ export default function StuffedAnimalForm({ onSuccess, onCancel }: Props) {
             purchaseDate: purchaseDate || undefined,
             notes: notes || undefined,
         };
-        await createStuffedAnimal(request);
-        setName('');
-        setSeriesId(null);
-        setCharacter('');
-        setPurchasePlace('');
-        setPurchaseDate('');
-        setNotes('');
+
+        // ① まずテキスト情報を登録し、作成されたIDを取得する
+        const created = await createStuffedAnimal(request);
+
+        // ② 画像が選ばれていれば、確定したIDを使って続けてアップロードする
+        //    （画像は任意項目のため、選ばれていなければこのステップはスキップする）
+        if (selectedImage) {
+            try {
+                await uploadAnimalImage(created.id, selectedImage);
+            } catch {
+                // 登録自体は成功しているので、画像だけ失敗した場合はエラーを致命的にはしない。
+                // ユーザーには一覧・編集画面から後で再アップロードしてもらう。
+                setError('登録は完了しましたが、画像のアップロードに失敗しました。編集画面から再度お試しください。');
+            }
+        }
+
         onSuccess();
     };
 
@@ -84,6 +99,11 @@ export default function StuffedAnimalForm({ onSuccess, onCancel }: Props) {
             <h2 className="form-title">🧸 ぬいぐるみを登録する</h2>
 
             <form onSubmit={handleSubmit} className="form-body">
+                <div className="field">
+                    <label>画像</label>
+                    <ImageSelectPreview onFileSelected={setSelectedImage} />
+                </div>
+
                 <div className="field">
                     <label>名前 *</label>
                     <input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="例: くまのプーさん" required />
