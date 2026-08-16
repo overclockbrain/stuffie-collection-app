@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { updateStuffedAnimal, type StuffedAnimalRequest, type StuffedAnimal } from '../api/stuffedAnimal';
 import { isSessionExpiredError } from '../api/client';
 import SeriesSelect from './SeriesSelect';
+import ImageUpload from './ImageUpload';
 import '../styles/StuffedAnimalForm.css';
 import '../styles/common.css';
 
@@ -18,6 +19,12 @@ export default function StuffedAnimalEditForm({ animal, onSuccess, onCancel }: P
     const [purchasePlace, setPurchasePlace] = useState(animal.purchasePlace ?? '');
     const [purchaseDate, setPurchaseDate] = useState(animal.purchaseDate ?? '');
     const [notes, setNotes] = useState(animal.notes ?? '');
+    // 画像アップロード成功時に最新のURLをここで保持しておき、
+    // 「更新する」ボタン押下時にテキスト項目と一緒に送信できるようにする。
+    // こうしないと、画像だけ先にアップロードされていても、
+    // 他のフィールド更新時に imageUrl が未指定（null相当）として扱われ、
+    // せっかくアップロードした画像URLが上書きで消えてしまう。
+    const [imageUrl, setImageUrl] = useState(animal.imageUrl);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -34,6 +41,7 @@ export default function StuffedAnimalEditForm({ animal, onSuccess, onCancel }: P
                 purchasePlace: purchasePlace || undefined,
                 purchaseDate: purchaseDate || undefined,
                 notes: notes || undefined,
+                imageUrl: imageUrl || undefined,
             };
             await updateStuffedAnimal(animal.id, request);
             onSuccess();
@@ -50,6 +58,17 @@ export default function StuffedAnimalEditForm({ animal, onSuccess, onCancel }: P
             <h2 className="form-title">✏️ ぬいぐるみを編集する</h2>
 
             <form onSubmit={handleSubmit} className="form-body">
+                <div className="field">
+                    <label>画像</label>
+                    <ImageUpload
+                        animalId={animal.id}
+                        currentImageUrl={imageUrl}
+                        onUploaded={(uploadedUrl) => {
+                            // ここで保持しておくことで、後続の「更新する」submitに反映される
+                            setImageUrl(uploadedUrl);
+                        }}
+                    />
+                </div>
                 <div className="field">
                     <label>名前 *</label>
                     <input className="input" value={name} onChange={(e) => setName(e.target.value)} required />

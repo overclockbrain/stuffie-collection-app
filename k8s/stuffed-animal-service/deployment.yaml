@@ -50,6 +50,22 @@ spec:
               value: "http://stuffie-collection.local"
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
+            - name: MINIO_ENDPOINT
+              value: "http://minio:9000"
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secret
+                  key: MINIO_ROOT_USER
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secret
+                  key: MINIO_ROOT_PASSWORD
+            - name: MINIO_BUCKET_NAME
+              value: "stuffie-images"
+            - name: MINIO_PUBLIC_URL_BASE
+              value: "http://stuffie-collection.local/stuffie-images"
           readinessProbe:
             httpGet:
               path: /actuator/health

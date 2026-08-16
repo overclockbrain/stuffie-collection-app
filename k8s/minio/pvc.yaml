@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-pvc
+  namespace: stuffie-collection
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      # 画像専用なので小さめに設定。足りなくなったら増やす。
+      storage: 10Gi

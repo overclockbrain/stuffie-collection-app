@@ -30,3 +30,12 @@ jwt:
 
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+
+minio:
+  # k3s内ではServiceの名前がそのまま使える（他のサービスと同じ考え方）
+  endpoint: ${MINIO_ENDPOINT:http://minio:9000}
+  access-key: ${MINIO_ACCESS_KEY:stuffie-admin}
+  secret-key: ${MINIO_SECRET_KEY:stuffie-minio-password-change-me}
+  bucket-name: ${MINIO_BUCKET_NAME:stuffie-images}
+  # ブラウザから直接アクセスするための公開URL（Ingress経由）
+  public-url-base: ${MINIO_PUBLIC_URL_BASE:http://stuffie-collection.local/stuffie-images}
